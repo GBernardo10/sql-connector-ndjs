@@ -1,13 +1,18 @@
-import { createServer } from 'http'
+import Hapi from '@hapi/hapi'
+import routes from './routes/index'
 
-const port = 3000
-const ip = 'localhost'
-
-const server = () =>
-  createServer((req, res) => {
-    res.end('teste')
+const init = async () => {
+  const server = Hapi.server({
+    port: 3000,
+    host: 'localhost'
   })
-
-server().listen(port, ip, () => {
-  console.log('err')
+  server.route(routes)
+  await server.start()
+  console.log('Sucesso')
+}
+process.on('unhandledRejection', err => {
+  console.log(err)
+  process.exit(1)
 })
+
+init()
